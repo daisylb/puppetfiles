@@ -4,7 +4,7 @@
 #  name: name of the app
 #  repo: URL to the Git repository where the app is stored
 #  branch: Branch of that repo to check out
-#  key: path to the SSH private key to use
+#  key: path to SSH private key to use (can be a puppet:// path)
 #  user: system user to run the app under
 #  dbname: name of the db to connect the app to
 #  dbpass: db password
@@ -48,6 +48,12 @@ define abre::django::project (
   }
 
   # Source Code
+  file {"/home/${user}/id":
+    ensure => present,
+    source => $key,
+    require => User[$user],
+  }
+
   vcsrepo {"/home/${user}/app":
     ensure => latest,
     owner => $user,
@@ -56,7 +62,7 @@ define abre::django::project (
     require => User[$user],
     source => $repo,
     revision => $branch,
-    identity => $key,
+    identity => "/home/${user}/id",
     notify => Upstart::Job[$name],
   }
   
