@@ -28,9 +28,9 @@ define abre::django::project (
   $secret_key,
 ){
   if ($manage_in_project) {
-    $managepy = "manage.py"
-  } else {
     $managepy = "${project_name}/manage.py"
+  } else {
+    $managepy = "manage.py"
   }
 
   # Database
