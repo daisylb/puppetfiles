@@ -138,7 +138,7 @@ define abre::django::project (
     require => [
       Vcsrepo["/home/${user}/app"],
       Virtualenv::Package['gunicorn'],
-      File['/home/site/app/abre/local_settings.py'],
+      File["/home/${user}/app/${project_name}/local_settings.py"],
       Exec['syncdb'],
     ],
     environment => {
