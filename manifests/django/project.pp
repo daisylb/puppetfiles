@@ -118,8 +118,6 @@ define abre::django::project (
     cwd => "/home/${user}/app",
     require => [
       Virtualenv::Requirements["/home/${user}/app/requirements.txt"],
-      Package['coffee-script'],
-      Package['less'],
     ],
   }
 
