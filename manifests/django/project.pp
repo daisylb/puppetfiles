@@ -106,7 +106,7 @@ define abre::django::project (
   
   # App setup
   exec {'syncdb':
-    command => "/home/${user}/virtualenv/bin/python ${managepy} syncdb --migrate",
+    command => "/home/${user}/virtualenv/bin/python ${managepy} syncdb --migrate --noinput",
     user => $user,
     group => $user,
     cwd => "/home/${user}/app",
