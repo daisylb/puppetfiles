@@ -11,6 +11,7 @@
 #  project_name: name of the Django project
 #  manage_in_project: true if manage.py is inside the project
 #  secret_key: The value to use for Django's secret key
+#  extra_config: Extra stuff to add to the config file.
 #
 # Expects the app to have:
 #  A requirements file at /requirements.txt
@@ -26,6 +27,7 @@ define abre::django::project (
   $project_name,
   $manage_in_project = false,
   $secret_key,
+  $extra_config,
 ){
   if ($manage_in_project) {
     $managepy = "${project_name}/manage.py"
