@@ -17,7 +17,6 @@
 #  A manage.py either /manage.py or /{project_name}/manage.py
 #  A settings.py that imports /{project_name}/local_settings.py at the end
 define abre::django::project (
-  $name = $title,
   $repo,
   $branch = 'master',
   $key = undef,
@@ -63,7 +62,7 @@ define abre::django::project (
     source => $repo,
     revision => $branch,
     identity => "/home/${user}/id",
-    notify => Upstart::Job[$name],
+    notify => Upstart::Job[$title],
   }
   
   # Virtualenv
@@ -125,11 +124,11 @@ define abre::django::project (
   }
 
   # Application
-  nginx::resource::upstream {$name:
+  nginx::resource::upstream {$title:
     ensure => present,
     members => "unix:/home/${user}/http.sock",
   }
-  upstart::job {$name:
+  upstart::job {$title:
     ensure => present,
     respawn => true,
     exec => "/home/${user}/virtualenv/bin/gunicorn wsgi:application -b unix:/home/${user}/http.sock",
