@@ -51,6 +51,9 @@ define abre::django::project (
     ensure => present,
     source => $key,
     require => User[$user],
+    owner => $user,
+    group => $user,
+    mode => 0600,
   }
 
   vcsrepo {"/home/${user}/app":
