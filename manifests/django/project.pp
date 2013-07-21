@@ -4,20 +4,20 @@
 #  name: name of the app
 #  repo: URL to the Git repository where the app is stored
 #  branch: Branch of that repo to check out
-#  key: path to the SSH private key to use
+#  key: path to SSH private key to use (can be a puppet:// path)
 #  user: system user to run the app under
 #  dbname: name of the db to connect the app to
 #  dbpass: db password
 #  project_name: name of the Django project
 #  manage_in_project: true if manage.py is inside the project
 #  secret_key: The value to use for Django's secret key
+#  extra_config: Extra stuff to add to the config file.
 #
 # Expects the app to have:
 #  A requirements file at /requirements.txt
 #  A manage.py either /manage.py or /{project_name}/manage.py
 #  A settings.py that imports /{project_name}/local_settings.py at the end
 define abre::django::project (
-  $name = $title,
   $repo,
   $branch = 'master',
   $key = undef,
@@ -27,11 +27,12 @@ define abre::django::project (
   $project_name,
   $manage_in_project = false,
   $secret_key,
+  $extra_config,
 ){
   if ($manage_in_project) {
-    $managepy = "manage.py"
-  } else {
     $managepy = "${project_name}/manage.py"
+  } else {
+    $managepy = "manage.py"
   }
 
   # Database
@@ -48,6 +49,15 @@ define abre::django::project (
   }
 
   # Source Code
+  file {"/home/${user}/id":
+    ensure => present,
+    source => $key,
+    require => User[$user],
+    owner => $user,
+    group => $user,
+    mode => 0600,
+  }
+
   vcsrepo {"/home/${user}/app":
     ensure => latest,
     owner => $user,
@@ -56,8 +66,8 @@ define abre::django::project (
     require => User[$user],
     source => $repo,
     revision => $branch,
-    identity => $key,
-    notify => Upstart::Job[$name],
+    identity => "/home/${user}/id",
+    notify => Upstart::Job[$title],
   }
   
   # Virtualenv
@@ -96,7 +106,7 @@ define abre::django::project (
   
   # App setup
   exec {'syncdb':
-    command => "/home/${user}/virtualenv/bin/python ${managepy} syncdb --migrate",
+    command => "/home/${user}/virtualenv/bin/python ${managepy} syncdb --migrate --noinput",
     user => $user,
     group => $user,
     cwd => "/home/${user}/app",
@@ -112,18 +122,16 @@ define abre::django::project (
     group => $user,
     cwd => "/home/${user}/app",
     require => [
-      Virtualenv::Requirements["/home/${site}/app/requirements.txt"],
-      Package['coffee-script'],
-      Package['less'],
+      Virtualenv::Requirements["/home/${user}/app/requirements.txt"],
     ],
   }
 
   # Application
-  nginx::resource::upstream {$name:
+  nginx::resource::upstream {$title:
     ensure => present,
     members => "unix:/home/${user}/http.sock",
   }
-  upstart::job {$name:
+  upstart::job {$title:
     ensure => present,
     respawn => true,
     exec => "/home/${user}/virtualenv/bin/gunicorn wsgi:application -b unix:/home/${user}/http.sock",
@@ -133,7 +141,7 @@ define abre::django::project (
     require => [
       Vcsrepo["/home/${user}/app"],
       Virtualenv::Package['gunicorn'],
-      File['/home/site/app/abre/local_settings.py'],
+      File["/home/${user}/app/${project_name}/local_settings.py"],
       Exec['syncdb'],
     ],
     environment => {
