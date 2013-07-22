@@ -125,6 +125,7 @@ define abre::django::project (
     cwd => "/home/${user}/app",
     require => [
       Virtualenv::Requirements["/home/${user}/app/requirements.txt"],
+      Virtualenv::Package["${user}-psycopg2"],
     ],
   }
 
