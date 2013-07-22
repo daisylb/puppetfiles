@@ -77,11 +77,13 @@ define abre::django::project (
     require => User[$user],
   }
 
-  virtualenv::package {'gunicorn':
+  virtualenv::package {"${user}-gunicorn":
+    package => 'gunicorn',
     env => "/home/${user}/virtualenv",
   }
 
-  virtualenv::package {'psycopg2':
+  virtualenv::package {"${user}-psycopg2":
+    package => 'psycopg2',
     env => "/home/${user}/virtualenv",
     require => [
       Package['libpq-dev'],
@@ -105,18 +107,18 @@ define abre::django::project (
   }
   
   # App setup
-  exec {'syncdb':
+  exec {"${user}-syncdb":
     command => "/home/${user}/virtualenv/bin/python ${managepy} syncdb --migrate --noinput",
     user => $user,
     group => $user,
     cwd => "/home/${user}/app",
     require => [
       Virtualenv::Requirements["/home/${user}/app/requirements.txt"],
-      Virtualenv::Package['psycopg2'],
+      Virtualenv::Package["${user}-psycopg2"],
     ],
   }
     
-  exec {'collectstatic':
+  exec {"${user}-collectstatic":
     command => "/home/${user}/virtualenv/bin/python ${managepy} collectstatic --noinput",
     user => $user,
     group => $user,
@@ -140,9 +142,9 @@ define abre::django::project (
     chdir => "/home/${user}/app",
     require => [
       Vcsrepo["/home/${user}/app"],
-      Virtualenv::Package['gunicorn'],
+      Virtualenv::Package["${user}-gunicorn"],
       File["/home/${user}/app/${project_name}/local_settings.py"],
-      Exec['syncdb'],
+      Exec["${user}-syncdb"],
     ],
     environment => {
       'PATH' =>
