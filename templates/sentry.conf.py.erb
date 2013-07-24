@@ -64,7 +64,7 @@ SENTRY_KEY = '<%=@secret_key%>'
 
 SENTRY_URL_PREFIX = '<%=@url%>'
 SENTRY_WEB_OPTIONS = {
-    'bind': '/home/sentryapp/sentry.sock',
+    'bind': 'unix:/home/sentryapp/sentry.sock',
     'workers': 3,  # the number of gunicorn workers
     'secure_scheme_headers': {'X-FORWARDED-PROTO': 'https'},
 }

@@ -60,4 +60,9 @@ class abre::sentry (
       '/home/sentryapp/virtualenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games',
     },
   }
+
+  nginx::resource::upstream {'sentry':
+    ensure => present,
+    members => "unix:/home/sentryapp/sentry.sock",
+  }
 }
