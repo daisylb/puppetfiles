@@ -39,10 +39,8 @@ class abre::sentry (
       Virtualenv::Package['sentryapp-sentry'],
       Postgresql::Db['sentryapp'],
     ],
-    environment => {
-      'PATH' =>
+    path =>
       '/home/sentryapp/virtualenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games',
-    },
   }
 
   upstart::job {'sentryapp':
