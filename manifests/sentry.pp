@@ -41,8 +41,7 @@ class abre::sentry (
     ],
     environment => {
       'PATH' =>
-      '/home/sentryapp/virtualenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:\
-/usr/bin:/sbin:/bin:/usr/games',
+      '/home/sentryapp/virtualenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games',
     },
   }
 
@@ -57,8 +56,7 @@ class abre::sentry (
     ],
     environment => {
       'PATH' =>
-      '/home/sentryapp/virtualenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:\
-/usr/bin:/sbin:/bin:/usr/games',
+      '/home/sentryapp/virtualenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games',
     },
   }
 }
