@@ -12,6 +12,8 @@ class abre::sentry (
 
   virtualenv::env {'/home/sentryapp/virtualenv':
     require => User['sentryapp'],
+    user => 'sentryapp',
+    group => 'sentryapp',
   }
 
   virtualenv::package {'sentryapp-sentry':
