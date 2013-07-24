@@ -26,9 +26,10 @@ class abre::sentry (
     password => $db_password,
   }
 
-  file {'/home/sentryapp/sentry.conf':
+  file {'/home/sentryapp/sentry.conf.py':
     ensure => present,
     require => User['sentryapp'],
+    content => template("abre/sentry.conf.py.erb"),
   }
 
   exec {'sentry-upgrade':
