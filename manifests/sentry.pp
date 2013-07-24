@@ -38,7 +38,7 @@ class abre::sentry (
     group => 'sentryapp',
     cwd => '/home/sentryapp',
     require => [
-      File['/home/sentryapp/sentry.conf'],
+      File['/home/sentryapp/sentry.conf.py'],
       Virtualenv::Package['sentryapp-sentry'],
       Postgresql::Db['sentryapp'],
     ],
