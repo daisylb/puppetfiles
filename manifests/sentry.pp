@@ -1,4 +1,10 @@
 # url: include protocol, leave out trailing slash
+#
+# After installing, you'll have to SSH into your server, and run:
+#  su - sentryapp
+#  . virtualenv/bin/activate
+#  sentry --config=sentry.conf.py createsuperuser
+#  sentry --config=sentry.conf.py repair --owner=<username>
 class abre::sentry (
   $secret_key,
   $db_password,
