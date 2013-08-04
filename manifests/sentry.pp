@@ -9,6 +9,7 @@ class abre::sentry (
   $secret_key,
   $db_password,
   $url,
+  $workers = 3,
 ){
   user {'sentryapp':
     ensure => present,
