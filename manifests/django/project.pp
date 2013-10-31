@@ -36,7 +36,7 @@ define abre::django::project (
   }
 
   # Database
-  postgresql::db {$dbname:
+  postgresql::server::db {$dbname:
     user => $dbname,
     password => $dbpass,
   }
@@ -69,7 +69,7 @@ define abre::django::project (
     identity => "/home/${user}/id",
     notify => Upstart::Job[$title],
   }
-  
+
   # Virtualenv
   virtualenv::env {"/home/${user}/virtualenv":
     user => $user,
@@ -105,7 +105,7 @@ define abre::django::project (
     notify => Upstart::Job['site'],
     content => template('abre/django/local_settings.py.erb'),
   }
-  
+
   # App setup
   exec {"${user}-syncdb":
     command => "/home/${user}/virtualenv/bin/python ${managepy} syncdb --migrate --noinput",
@@ -117,7 +117,7 @@ define abre::django::project (
       Virtualenv::Package["${user}-psycopg2"],
     ],
   }
-    
+
   exec {"${user}-collectstatic":
     command => "/home/${user}/virtualenv/bin/python ${managepy} collectstatic --noinput",
     user => $user,

@@ -33,7 +33,7 @@ class abre::sentry (
     env => '/home/sentryapp/virtualenv',
   }
 
-  postgresql::db {'sentryapp':
+  postgresql::server::db {'sentryapp':
     user => 'sentry',
     password => $db_password,
   }
@@ -52,7 +52,7 @@ class abre::sentry (
     require => [
       File['/home/sentryapp/sentry.conf.py'],
       Virtualenv::Package['sentryapp-sentry'],
-      Postgresql::Db['sentryapp'],
+      Postgresql::Server::Db['sentryapp'],
     ],
     path =>
       '/home/sentryapp/virtualenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games',
