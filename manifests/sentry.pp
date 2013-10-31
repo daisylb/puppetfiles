@@ -10,6 +10,11 @@ class abre::sentry (
   $db_password,
   $url,
   $workers = 3,
+  $email_host = localhost,
+  $email_user = '',
+  $email_pass = '',
+  $email_port = 25,
+  $email_tls = false,
 ){
   user {'sentryapp':
     ensure => present,
